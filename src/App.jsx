@@ -10,13 +10,28 @@ function App() {
   function handleNewColor(newColor) {
     setColors((prevColors) => [newColor, ...prevColors]);
   }
+
+  function handleDeleteColor(id) {
+    setColors(
+      colors.filter((color) => {
+        return color.id !== id;
+      })
+    );
+  }
+
   return (
     <>
       <h1>Theme Creator</h1>
       <ColorForm onNewColor={handleNewColor} />
-      {colors.map((color) => {
-        return <Color key={color.id} color={color} />;
-      })}
+      {colors.length > 0 ? (
+        colors.map((color) => {
+          return (
+            <Color key={color.id} color={color} onDelete={handleDeleteColor} />
+          );
+        })
+      ) : (
+        <h4>Please add some colors</h4>
+      )}
     </>
   );
 }
