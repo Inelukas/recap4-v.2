@@ -1,11 +1,23 @@
 import { useState } from "react";
 import "./Color.css";
+import { ColorForm } from "../ColorForm/ColorForm";
 
-export default function Color({ color, onDelete }) {
+export default function Color({ color, onDelete, onUpdateColor }) {
   const [deleteVisible, setDeleteVisible] = useState(false);
+  const [editVisible, setEditVisible] = useState(false);
 
   function toggleDelete() {
     setDeleteVisible(!deleteVisible);
+  }
+
+  function toggleEdit() {
+    setEditVisible(!editVisible);
+  }
+
+  function handleEditColor(editedColor) {
+    const newColorValues = { id: color.id, ...editedColor };
+    onUpdateColor(newColorValues);
+    toggleEdit();
   }
 
   return (
@@ -33,6 +45,27 @@ export default function Color({ color, onDelete }) {
           >
             DELETE
           </button>
+        </div>
+      )}
+      {!editVisible ? (
+        <button onClick={toggleEdit}>EDIT</button>
+      ) : (
+        <div>
+          <ColorForm
+            initialValues={{
+              role: color.role,
+              hex: color.hex,
+              contrast: color.contrastText,
+            }}
+            ids={{
+              roleId: "roleColor",
+              hexId: "hexColor",
+              contrastId: "contrastColor",
+            }}
+            onNewColor={handleEditColor}
+            buttonName="UPDATE COLOR"
+          />
+          <button onClick={toggleEdit}>CANCEL</button>
         </div>
       )}
     </div>

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { uid } from "uid";
 
 const StyledForm = styled.form`
   display: flex;
@@ -25,12 +24,13 @@ const StyledForm = styled.form`
   }
 `;
 
-export function ColorForm({ onNewColor }) {
-  const [inputValues, setInputValues] = useState({
-    role: "",
-    hex: "#000000",
-    contrast: "#ffffff",
-  });
+export function ColorForm({
+  onNewColor,
+  initialValues = { role: "", hex: "#000000", contrast: "#ffffff" },
+  ids = { roleId: "role", hexId: "hex", contrastId: "contrast" },
+  buttonName = "ADD COLOR",
+}) {
+  const [inputValues, setInputValues] = useState(initialValues);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -41,11 +41,10 @@ export function ColorForm({ onNewColor }) {
 
   function handleSubmit(event) {
     event.preventDefault();
-    const role = document.getElementById("role").value;
-    const hex = document.getElementById("hex").value;
-    const contrast = document.getElementById("contrast").value;
+    const role = document.getElementById(ids.roleId).value;
+    const hex = document.getElementById(ids.hexId).value;
+    const contrast = document.getElementById(ids.contrastId).value;
     const newColor = {
-      id: uid(),
       role: role,
       hex: hex,
       contrastText: contrast,
@@ -67,7 +66,7 @@ export function ColorForm({ onNewColor }) {
           onChange={handleChange}
           type="text"
           name="role"
-          id="role"
+          id={ids.roleId}
           value={inputValues.role}
         />
       </fieldset>
@@ -78,7 +77,7 @@ export function ColorForm({ onNewColor }) {
             onChange={handleChange}
             type="text"
             name="hex"
-            id="hex"
+            id={ids.hexId}
             value={inputValues.hex}
           />
           <input
@@ -96,7 +95,7 @@ export function ColorForm({ onNewColor }) {
             onChange={handleChange}
             type="text"
             name="contrast"
-            id="contrast"
+            id={ids.contrastId}
             value={inputValues.contrast}
           />
           <input
@@ -107,7 +106,7 @@ export function ColorForm({ onNewColor }) {
           />
         </div>
       </fieldset>
-      <button type="submit">ADD COLOR</button>
+      <button type="submit">{buttonName}</button>
     </StyledForm>
   );
 }
