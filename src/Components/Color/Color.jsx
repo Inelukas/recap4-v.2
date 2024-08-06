@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./Color.css";
 import { ColorForm } from "../ColorForm/ColorForm";
 import { CopyToClipboard } from "../CopyToClipboard/CopyToClipboard";
@@ -6,6 +6,22 @@ import { CopyToClipboard } from "../CopyToClipboard/CopyToClipboard";
 export default function Color({ color, onDelete, onUpdateColor }) {
   const [deleteVisible, setDeleteVisible] = useState(false);
   const [editVisible, setEditVisible] = useState(false);
+  const [contrastRating, setContrastRating] = useState("");
+
+  useEffect(() => {
+    async function postFetch() {
+      const response = await fetch(
+        "https://www.aremycolorsaccessible.com/api/are-they",
+        {
+          method: "POST",
+          body: JSON.stringify({ colors: [color.hex, color.contrast] }),
+        }
+      ).then((response) => response.json());
+      setContrastRating(response.overall);
+    }
+
+    postFetch();
+  }, [color.hex, color.contrast]);
 
   function toggleDelete() {
     setDeleteVisible(!deleteVisible);
@@ -33,6 +49,7 @@ export default function Color({ color, onDelete, onUpdateColor }) {
       <CopyToClipboard text={color.hex} />
       <h4>{color.role}</h4>
       <p>contrast: {color.contrastText}</p>
+      <p>Overall Contrast Score: {contrastRating}</p>
       {!deleteVisible ? (
         <button onClick={toggleDelete}>DELETE</button>
       ) : (
