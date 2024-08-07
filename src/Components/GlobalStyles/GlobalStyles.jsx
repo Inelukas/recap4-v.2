@@ -1,3 +1,6 @@
+import { createGlobalStyle } from "styled-components";
+
+export const GlobalStyles = createGlobalStyle`
 /* This is a modern css reset found here:
 https://www.joshwcomeau.com/css/custom-css-reset/
 */
@@ -64,3 +67,5 @@ h6 {
 #__next {
   isolation: isolate;
 }
+
+`;

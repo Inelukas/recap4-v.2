@@ -1,7 +1,19 @@
 import { useEffect, useState } from "react";
-import "./Color.css";
 import { ColorForm } from "../ColorForm/ColorForm";
 import { CopyToClipboard } from "../CopyToClipboard/CopyToClipboard";
+import styled from "styled-components";
+
+const StyledColor = styled.div`
+  margin: 0px 10px;
+  padding: 5px;
+
+  .color-card-hightlight {
+    display: inline;
+    padding: 2px 6px;
+    background: black;
+    color: white;
+  }
+`;
 
 export default function Color({ color, onDelete, onUpdateColor }) {
   const [deleteVisible, setDeleteVisible] = useState(false);
@@ -23,23 +35,19 @@ export default function Color({ color, onDelete, onUpdateColor }) {
     postFetch();
   }, [color.hex, color.contrastText]);
 
-  function toggleDelete() {
-    setDeleteVisible(!deleteVisible);
-  }
-
-  function toggleEdit() {
-    setEditVisible(!editVisible);
+  function toggleButton(button) {
+    button === "edit" && setEditVisible(!editVisible);
+    button === "delete" && setDeleteVisible(!deleteVisible);
   }
 
   function handleEditColor(editedColor) {
     const newColorValues = { id: color.id, ...editedColor };
     onUpdateColor(newColorValues);
-    toggleEdit();
+    toggleButton("edit");
   }
 
   return (
-    <div
-      className="color-card"
+    <StyledColor
       style={{
         background: color.hex,
         color: color.contrastText,
@@ -49,16 +57,42 @@ export default function Color({ color, onDelete, onUpdateColor }) {
       <CopyToClipboard text={color.hex} />
       <h4>{color.role}</h4>
       <p>contrast: {color.contrastText}</p>
-      <p>Overall Contrast Score: {contrastRating}</p>
+      <p
+        style={{
+          background:
+            (contrastRating === "Nope" && "red") ||
+            (contrastRating === "Yup" && "green") ||
+            (contrastRating === "Kinda" && "orange"),
+          color:
+            (contrastRating === "Nope" && "black") ||
+            (contrastRating === "Yup" && "white") ||
+            (contrastRating === "Kinda" && "black"),
+          opacity: 0.8,
+        }}
+      >
+        Overall Contrast Score: {contrastRating}
+      </p>
       {!deleteVisible ? (
-        <button onClick={toggleDelete}>DELETE</button>
+        <button
+          onClick={() => {
+            toggleButton("delete");
+          }}
+        >
+          DELETE
+        </button>
       ) : (
         <div>
           <p className="color-card-hightlight">Really delete?</p>
-          <button onClick={toggleDelete}>CANCEL</button>
           <button
             onClick={() => {
-              toggleDelete();
+              toggleButton("delete");
+            }}
+          >
+            CANCEL
+          </button>
+          <button
+            onClick={() => {
+              toggleButton("delete");
               onDelete(color.id);
             }}
           >
@@ -67,7 +101,13 @@ export default function Color({ color, onDelete, onUpdateColor }) {
         </div>
       )}
       {!editVisible ? (
-        <button onClick={toggleEdit}>EDIT</button>
+        <button
+          onClick={() => {
+            toggleButton("edit");
+          }}
+        >
+          EDIT
+        </button>
       ) : (
         <div>
           <ColorForm
@@ -84,9 +124,15 @@ export default function Color({ color, onDelete, onUpdateColor }) {
             onNewColor={handleEditColor}
             buttonName="UPDATE COLOR"
           />
-          <button onClick={toggleEdit}>CANCEL</button>
+          <button
+            onClick={() => {
+              toggleButton("edit");
+            }}
+          >
+            CANCEL
+          </button>
         </div>
       )}
-    </div>
+    </StyledColor>
   );
 }

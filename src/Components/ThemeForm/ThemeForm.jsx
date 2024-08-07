@@ -58,7 +58,7 @@ export function ThemeForm({
         <form onSubmit={handleNewThemeName}>
           <label htmlFor="themeName">Theme Name:</label>
           <div>
-            <input name="themeName" required />
+            <input name="themeName" placeholder={currentTheme} required />
             <button type="submit">UPDATE</button>
             <button
               onClick={() => {

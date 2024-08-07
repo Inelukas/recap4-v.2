@@ -1,10 +1,15 @@
 import { initialColors, initialThemes } from "./lib/colors";
 import Color from "./Components/Color/Color";
-import "./App.css";
 import { ColorForm } from "./Components/ColorForm/ColorForm";
 import { uid } from "uid";
 import { ThemeForm } from "./Components/ThemeForm/ThemeForm";
 import useLocalStorageState from "use-local-storage-state";
+import styled from "styled-components";
+
+const StyledFragment = styled.div`
+  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  padding: 10px;
+`;
 
 function App() {
   const [colors, setColors] = useLocalStorageState("colors", {
@@ -85,7 +90,7 @@ function App() {
   }
 
   return (
-    <>
+    <StyledFragment>
       <h1>Theme Creator</h1>
       <ThemeForm
         themes={themes}
@@ -110,7 +115,7 @@ function App() {
       ) : (
         <h4>Please add some colors</h4>
       )}
-    </>
+    </StyledFragment>
   );
 }
 
