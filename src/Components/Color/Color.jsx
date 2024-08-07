@@ -14,14 +14,14 @@ export default function Color({ color, onDelete, onUpdateColor }) {
         "https://www.aremycolorsaccessible.com/api/are-they",
         {
           method: "POST",
-          body: JSON.stringify({ colors: [color.hex, color.contrast] }),
+          body: JSON.stringify({ colors: [color.hex, color.contrastText] }),
         }
       ).then((response) => response.json());
       setContrastRating(response.overall);
     }
 
     postFetch();
-  }, [color.hex, color.contrast]);
+  }, [color.hex, color.contrastText]);
 
   function toggleDelete() {
     setDeleteVisible(!deleteVisible);
